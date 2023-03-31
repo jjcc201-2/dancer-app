@@ -1,3 +1,4 @@
+//CommonJS module syntax is used to import the express module. This can be changed to ES6 module syntax if desired.
 const express = require('express');
 const path = require('path');
 

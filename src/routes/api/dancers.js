@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const uuid = require('uuid');
-const dancers = require('../../Dancers');
+var dancers = require('../../Dancers');
 
 // @route GET api/dancers/:id
 // @desc Get single dancer
@@ -38,6 +38,7 @@ router.post('/', (req, res) => {
         country: req.body.country
     }
 
+    // Checks for empty fields in the request body
     if(!newMember.name || !newMember.email || !newMember.category || !newMember.level || !newMember.country) {
         return res.status(400).json({msg: 'Please include all fields'});
     }
@@ -57,6 +58,7 @@ router.put('/:id', (req, res) => {
     if (found) {
         const updMember = req.body;
         dancers.forEach(dancer => {
+            // Finds the dancer to update and updates the fields that are present in the request body
             if(dancer.id === parseInt(req.params.id)) {
                 dancer.name = updMember.name ? updMember.name : dancer.name;
                 dancer.email = updMember.email ? updMember.email : dancer.email;
@@ -84,9 +86,13 @@ router.delete('/:id', (req, res) => {
     const found = dancers.some(dancer => dancer.id === parseInt(req.params.id));
 
     if (found) {
+
+        // delete the dancer from the array of dancers based on the id
+        dancers = dancers.filter(dancer => dancer.id !== parseInt(req.params.id));
+
         res.json({
             msg: 'Member deleted',
-            dancers: dancers.filter(dancer => dancer.id != parseInt(req.params.id))});
+            dancers: dancers});
     } else {
         res.status(400).json({msg: `Dancer ${req.params.id} not found`})
     }
